@@ -6,16 +6,15 @@ import com.ankov.textformatter.model.CorrectWordsDto;
 import com.ankov.textformatter.model.CorrectWordsResponse;
 import com.ankov.textformatter.model.ExceptionResponse;
 import com.ankov.textformatter.services.FormatterService;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolationException;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.util.List;
-
 
 @RestController
 @AllArgsConstructor
@@ -27,16 +26,17 @@ public class TextFormatterController {
     private final FormatterService formatterService;
 
     @PostMapping("/tf")
+    @ApiOperation(value = "Inputs text to translate and format it to view, suitable for Google Translator")
     public String inputText(@RequestBody String text,
                             @RequestParam(value = "code", required = false)
-                            @Min(MIN_CODE) @Max(MAX_CODE)
+                            @Range(min = MIN_CODE, max = MAX_CODE)
                                     Integer code) {
         return formatterService.inputText(text, code);
     }
 
     @GetMapping("/text")
     public String getText(@RequestParam(value = "code")
-                          @Min(MIN_CODE) @Max(MAX_CODE)
+                          @Range(min = MIN_CODE, max = MAX_CODE)
                                   int code) {
         return formatterService.getText(code);
     }
@@ -45,7 +45,7 @@ public class TextFormatterController {
     @PostMapping("/overwrite")
     public String overwriteText(@RequestBody String text,
                                 @RequestParam(value = "code")
-                                @Min(MIN_CODE) @Max(MAX_CODE)
+                                @Range(min = MIN_CODE, max = MAX_CODE)
                                         int code) {
         return formatterService.overwriteText(text, code);
     }
@@ -61,8 +61,8 @@ public class TextFormatterController {
     }
 
     @GetMapping("/html")
-    public String getHtml(@RequestParam(value = "id", required = false) Integer sectionId) {
-        return formatterService.getHtml(List.of(sectionId));
+    public String getHtml(@RequestParam(value = "id") Integer sectionId) {
+        return formatterService.getHtml(sectionId);
     }
 
     @PutMapping("/correct")

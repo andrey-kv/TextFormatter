@@ -112,19 +112,15 @@ public class FormatterService {
         return text;
     }
 
-    public String getHtml(List<Integer> ids) {
+    public String getHtml(Integer sectionId) {
 
-        String body = "";
-        for (int sectionId : ids) {
-            List<Toc> headers = tocRepository.getTocByIdAndIsActiveTrueOrderById(sectionId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Header with id = " + sectionId + " not found."));
+        List<Toc> headers = tocRepository.getTocByIdAndIsActiveTrueOrderById(sectionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Header with id = " + sectionId + " not found."));
 
-            List<Toc> texts = tocRepository.getTocByParentCodeAndIsActiveTrueOrderById(sectionId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Texts with sectionId = " + sectionId + " not found."));
+        List<Toc> texts = tocRepository.getTocByParentCodeAndIsActiveTrueOrderById(sectionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Texts with sectionId = " + sectionId + " not found."));
 
-            body += htmlService.assembleHtml(headers, texts);
-        }
-
+        String body = htmlService.assembleHtml(headers, texts);
         return htmlService.addHeader(body);
     }
 

@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -25,10 +26,10 @@ class TextFormatterControllerTest {
 
     @Test
     void getHtml() throws Exception {
-        when(formatterService.getHtml(null)).thenReturn("");
+        when(formatterService.getHtml(any())).thenReturn("");
 
         mockMvc.perform(MockMvcRequestBuilders
-        .get("/html"))
+        .get("/html?id=2"))
         .andExpect(status().isOk());
     }
 
